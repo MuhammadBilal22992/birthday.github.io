@@ -15,7 +15,7 @@
             height: 100vh;
             margin: 0;
             display: flex;
-            flex-wrap:nowrap;
+            flex-wrap: nowrap;
             justify-content: center;
             align-items: center;
             flex-direction: column;
@@ -168,10 +168,67 @@
             border: none;
             border-radius: 10px;
             transition: background-color 0.3s;
+            display: none; /* Hidden until the timer hits zero */
+            z-index: 10; /* Ensure button is on top */
         }
 
         button:hover {
             background-color: #FF1493;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding-top: 20px;
+            }
+
+            #timer {
+                font-size: 60px;
+                padding: 15px;
+            }
+
+            .birthday-message {
+                font-size: 60px;
+            }
+
+            .message-container {
+                font-size: 30px;
+            }
+
+            .confetti {
+                width: 7px;
+                height: 7px;
+            }
+
+            button {
+                font-size: 18px;
+                padding: 12px 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #timer {
+                font-size: 45px;
+                padding: 10px;
+            }
+
+            .birthday-message {
+                font-size: 50px;
+            }
+
+            .message-container {
+                font-size: 25px;
+            }
+
+            .confetti {
+                width: 5px;
+                height: 5px;
+            }
+
+            button {
+                font-size: 16px;
+                padding: 10px 20px;
+            }
         }
     </style>
 </head>
@@ -197,6 +254,8 @@
         <div class="progress-bar-inner" id="progressBarInner"></div>
     </div>
 
+    <button id="surpriseButton">Click me for a surprise!</button>
+
     <script>
         let timerElement = document.getElementById("timer");
         let audio = document.getElementById("timer-sound");
@@ -209,14 +268,20 @@
         let message2 = document.getElementById("message2");
         let message3 = document.getElementById("message3");
         let progressBarInner = document.getElementById("progressBarInner");
+        let surpriseButton = document.getElementById("surpriseButton");
         let timerInterval;
 
         // Set target time
         let targetHours = 21;
-        let targetMinutes = 10;
+        let targetMinutes = 47;
         let targetSeconds = 0;
 
-        // Start timer
+        // Start timer as soon as the page loads
+        window.onload = function () {
+            startTimer();
+        }
+
+        // Start countdown function
         function startTimer() {
             let now = new Date();
             let targetTime = new Date(now);
@@ -249,8 +314,7 @@
                     clearInterval(timerInterval);
                     timerElement.style.display = 'none';
                     title.style.display = 'none';
-                    audio.play();
-                    displayBirthdayAnimation();
+                    surpriseButton.style.display = 'block'; // Show button when timer hits zero
                     return;
                 }
 
@@ -268,6 +332,7 @@
         }
 
         function displayBirthdayAnimation() {
+            console.log("Surprise triggered!");
             birthdayMessage.style.display = "block";
             birthdayMessage.style.animation = "fadeInMessage 3s forwards";
 
@@ -300,7 +365,13 @@
             }, 5000);
         }
 
-        startTimer();
+        // Event listener for button click
+        surpriseButton.addEventListener('click', function() {
+            console.log("Button clicked!");
+            audio.play();  // Play the sound
+            displayBirthdayAnimation();  // Trigger animations
+            surpriseButton.style.display = 'none';  // Hide the button after it's clicked
+        });
     </script>
 
 </body>
